@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/airsoft-game-client/static/css/main.78af3ff6.css",
+    "main.js": "/airsoft-game-client/static/js/main.9aef87c1.js",
+    "index.html": "/airsoft-game-client/index.html",
+    "main.78af3ff6.css.map": "/airsoft-game-client/static/css/main.78af3ff6.css.map",
+    "main.9aef87c1.js.map": "/airsoft-game-client/static/js/main.9aef87c1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.78af3ff6.css",
+    "static/js/main.9aef87c1.js"
+  ]
+}
