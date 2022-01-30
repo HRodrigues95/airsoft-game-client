@@ -18,6 +18,12 @@ const IndexGameModes = () => {
 
   return (
     <Paper className='game-mode-accordions__container'>
+    <Typography className='game-mode-accordions__header'>
+      This is a Testing App
+    </Typography>
+
+
+
       {gameModesList.map(({ name, locations, teams, total_points }) => (
         <Accordion className='game-mode-accordions__acordion'>
           <AccordionSummary className='game-mode-accordions__acordion--summary' expandIcon={<ExpandMore />}>
