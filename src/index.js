@@ -1,15 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { store } from './app/store';
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
+import { store } from './app/store';
+import GameMode from './app/routes/gameModes'
+
+const Routing = () => {
+  return(
+    <Router>
+      <Routes>
+        <Route path="*" element={<GameMode />} />
+      </Routes>
+    </Router>
+  )
+}
+
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Routing />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

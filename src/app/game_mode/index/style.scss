@@ -1,0 +1,67 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.game-mode-accordions {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgrey !important;
+  }
+
+  &__acordion {
+    margin: 8px !important;
+    border-radius: 5px !important;
+    border: 5px ridge rgba(232,7,21,0.43) !important;
+
+    &--summary {
+      background: linear-gradient(270deg, rgba(236,227,125,0.6125290023201856) 40%, rgba(219,66,22,0.8839907192575406) 100%);
+    }
+
+    &--content {
+      border-top: 2px ridge rgba(232,7,21,0.43) !important;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+
+  &__header {
+    font-family: 'Lato' !important;
+    font-weight: 600 !important;
+    font-size: 32px !important;
+    color: #fef4ee !important;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  &__label {
+    font-family: 'Lato' !important;
+    text-align: center;
+    font-weight: 500 !important;
+    font-size: 24px !important;
+    margin: 8px !important;
+  }
+
+  &__detail {
+    font-family: 'Lato' !important;
+    font-size: 24px !important;
+  }
+  
+  &__btn {
+    margin-top: 10px !important;
+    font-family: 'Lato' !important;
+    font-weight: 700 !important;
+    width: 100px !important;
+    background-color: #b8553d !important;
+  }
+}
