@@ -16,8 +16,6 @@ const Routing = () => {
   )
 }
 
-
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
