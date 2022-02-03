@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { GameModes, GameMode } from '../../endpoints';
+import { GameModes, GameMode, GameModeAction, Teams, Team, TeamAction, Locations, Location } from '../../endpoints';
 
 const initialState = {
   loading: false,
@@ -8,7 +8,9 @@ const initialState = {
     name: '',
     locations: [],
     teams: []
-  }
+  },
+  currentTeams: [],
+  currentLocations: []
 };
 
 // Request to API
@@ -38,11 +40,92 @@ export const getGameMode = createAsyncThunk(
   }
 )
 
+export const updateGameMode = createAsyncThunk(
+  'gameModes/updateGameMode',
+  async ({ gameMode, action }) => {
+    let url =  GameMode(gameMode)
+    if (action) {
+      url = GameModeAction(gameMode, action)
+    }
+    const options = { method: 'PATCH' }
+
+    const response = await fetch(url, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
 export const deleteGameMode = createAsyncThunk(
   'gameModes/deleteGameMode',
   async (id) => {
     const URL = GameMode(id)
     const options = { method: 'DELETE' }
+
+    const response = await fetch(URL, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
+export const getTeams = createAsyncThunk(
+  'gameModes/getTeams',
+  async ({ gameMode }) => {
+    const URL = Teams(gameMode)
+    const options = { method: 'GET' }
+
+    const response = await fetch(URL, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
+export const updateTeam = createAsyncThunk(
+  'gameModes/updateTeam',
+  async ({ gameMode, team, data }) => {
+    const URL = Team(gameMode, team)
+    const options = { method: 'PATCH', body: data }
+
+    const response = await fetch(URL, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
+export const updateActionTeam = createAsyncThunk(
+  'gameModes/updateActionTeam',
+  async ({ gameMode, team, data, action }) => {
+    const URL = TeamAction(gameMode, team, action)
+    const options = { method: 'PATCH', body: data }
+
+    const response = await fetch(URL, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
+export const getLocations = createAsyncThunk(
+  'gameModes/getLocations',
+  async ({ gameMode }) => {
+    const URL = Locations(gameMode)
+    const options = { method: 'GET' }
+
+    const response = await fetch(URL, options);
+    const json = await response.json()
+
+    return json;
+  }
+)
+
+export const updateLocation = createAsyncThunk(
+  'gameModes/updateLocation',
+  async ({ gameMode, location , data }) => {
+    const URL = Location(gameMode, location)
+    const options = { method: 'PATCH', body: data }
 
     const response = await fetch(URL, options);
     const json = await response.json()
@@ -79,6 +162,67 @@ export const gameModesSlice = createSlice({
       .addCase(getGameMode.fulfilled, (state, action) => {
         state.loading = false
         state.currentGameMode = action.payload
+      })
+      .addCase(getTeams.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getTeams.fulfilled, (state, action) => {
+        state.loading = false
+        state.currentTeams = action.payload
+      })
+      .addCase(updateTeam.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateTeam.fulfilled, (state, action) => {
+        const { payload } = action
+
+        state.currentTeams = state.currentTeams.map( team => {
+          if (team.id === payload.id) return payload
+          else return team
+        })
+        state.loading = false
+      })
+      .addCase(updateActionTeam.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateActionTeam.fulfilled, (state, action) => {
+        const { payload } = action
+
+        state.currentTeams = state.currentTeams.map( team => {
+          if (team.id === payload.id) return payload
+          else return team
+        })
+        state.loading = false
+      })
+      .addCase(getLocations.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getLocations.fulfilled, (state, action) => {
+        const { payload } = action
+
+        state.currentLocations = payload
+        state.loading = false
+      })
+      .addCase(updateLocation.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateLocation.fulfilled, (state, action) => {
+        const { payload } = action
+
+        state.currentLocations = state.currentLocations.map( team => {
+          if (team.id === payload.id) return payload
+          else return team
+        })
+        state.loading = false
+      })
+      .addCase(updateGameMode.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateGameMode.fulfilled, (state, action) => {
+        const { payload } = action
+
+        state.currentGameMode = payload
+        state.loading = false
       })
   }
 });
