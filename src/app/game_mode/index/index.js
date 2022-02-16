@@ -30,7 +30,10 @@ const IndexGameModes = () => {
           <Typography class='flex flex-grow justify-center text-2xl text-slate-700 text-center font-bold self-center bg-gradient-to-t from-slate-100 to-slate-300 border border-slate-900 rounded-md'>
             Game Modes:
           </Typography>
-          <Button class='bg-gradient-to-t from-zinc-500 to-zinc-800 rounded-md w-32 border border-slate-900 ml-10'>
+
+          <Button 
+            class='bg-gradient-to-t from-zinc-500 to-zinc-800 rounded-md w-32 border border-slate-900 ml-10'
+          >
             <Typography class='text-center text-2xl text-blue-100 font-bold self-center'>
               Add
             </Typography>
@@ -47,10 +50,10 @@ const IndexGameModes = () => {
               <Button class='p-2 bg-gradient-to-t from-slate-800 to-slate-400 font-bold text-slate-100 rounded-md' onClick={handleGoTo(id)}>
                 View
               </Button>
-
+{/* 
               <Button class='p-2 bg-gradient-to-t from-slate-800 to-slate-400 font-bold text-slate-100 rounded-md ml-2' onClick={handleDelete(id)}>
                 Delete
-              </Button>
+              </Button> */}
             </Box>
           </Box>
         ))}

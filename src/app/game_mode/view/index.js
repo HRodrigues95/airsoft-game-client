@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Box, Typography, Button } from '@mui/material'
 import { getGameMode, updateGameMode } from '../reducer'
 import Logo from '../../imgs/Logo.jpg'
@@ -10,6 +10,7 @@ import Locations from './locations'
 const ViewGameMode = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const gameMode = useSelector(({ gameModes }) => gameModes.currentGameMode)
   const loading = useSelector(({ gameModes }) => gameModes.loading)
 
@@ -25,6 +26,8 @@ const ViewGameMode = () => {
     // return () => clearTimeout(timer);
   })
 
+  const handleBack = () => navigate('/')
+
   const handleStartStop = () => {
     if (gameMode.ongoing) {
       dispatch(updateGameMode({gameMode: id, action: 'end'}))
@@ -36,6 +39,15 @@ const ViewGameMode = () => {
   return (
     <Box class='flex flex-col bg-gradient-to-b from-black via-slate-900 to-slate-400 p-6 h-full'>
       <img alt='logo' class='flex w-28 self-center' src={Logo} />
+
+      <Button
+        onClick={handleBack}
+        class={`flex flex-row items-center mt-3 rounded-md border-2`}
+      >
+        <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-gray-300 text-2xl'>
+          Back
+        </Typography>
+      </Button>
 
       <Button
         onClick={handleStartStop}
