@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Typography, Button, Modal } from '@mui/material'
+import { Box, Typography, Modal } from '@mui/material'
 import { getTeams, updateActionTeam, updateTeam, createTeam, deleteTeam } from '../reducer'
+import { RangeInput, DeleteButton, ResetButton, Button } from './controls'
 
 const Teams = ({ gameMode }) => {
   const [currentTeam, setCurrentTeam] = useState(null)
@@ -46,15 +47,19 @@ const Teams = ({ gameMode }) => {
   }
 
   const handleAddPoints = () => {
-    const form = new FormData()
-    form.append('team[amount]', points)
-    dispatch(updateActionTeam({ gameMode, team: currentTeam.id, data: form, action: 'increase' }))
+    if (points) {
+      const form = new FormData()
+      form.append('team[amount]', points)
+      dispatch(updateActionTeam({ gameMode, team: currentTeam.id, data: form, action: 'increase' }))
+    }
   }
 
   const handleRemovePoints = () => {
-    const form = new FormData()
-    form.append('team[amount]', points)
-    dispatch(updateActionTeam({ gameMode, team: currentTeam.id, data: form, action: 'decrease' }))
+    if (points) {
+      const form = new FormData()
+      form.append('team[amount]', points)
+      dispatch(updateActionTeam({ gameMode, team: currentTeam.id, data: form, action: 'decrease' }))
+    }
   }
 
   const handleRespawn = () => {
@@ -80,12 +85,22 @@ const Teams = ({ gameMode }) => {
         {!adding && (
           <Button
             onClick={() => setAdding(!adding)}
-            class='flex flex-row items-center font-bold text-xl rounded-md w-1/4 bg-gradient-to-t  from-lime-600 to-green-100'
-          >
-            <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-              Add
-            </Typography>
-          </Button>
+            label='Add'
+            class='
+              flex flex-row items-center
+              whitespace-normal
+              w-[150px] overflow-auto font-sans
+              transition ease-linear delay-[20ms] duration-[30ms]
+              font-bold text-3xl text-center text-slate-100
+              border-2 border-green-500 rounded-md
+              bg-lime-600
+              hover:bg-lime-500
+              hover:cursor-pointer
+              hover:shadow-inner hover:shadow-lime-500
+              hover:border-lime-400
+              hover:scale-105
+            '
+          />
         )}
       </Box>
 
@@ -107,33 +122,65 @@ const Teams = ({ gameMode }) => {
           <Box class='flex flex-row w-5/6 justify-between pr-4 pl-4 pt-4'>
             <Button
               onClick={() => setAdding(!adding)}
-              class='flex flex-row items-center font-bold text-xl rounded-md bg-gradient-to-t w-1/3 from-orange-600 to-slate-100'
-            >
-              <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-                Cancel
-              </Typography>
-            </Button>
+              label='Cancel'
+              class='
+                flex flex-row items-center
+                whitespace-normal
+                w-[200px] h-[48px] overflow-auto font-sans
+                transition ease-linear delay-[20ms] duration-[30ms]
+                font-bold text-3xl text-center
+                border-2 border-red-500 rounded-md
+                bg-orange-600
+                hover:bg-oreange-500
+                hover:cursor-pointer hover:text-slate-200
+                hover:shadow-inner hover:shadow-red-300
+                hover:border-red-300
+                hover:scale-105
+              '
+            />
             
             <Button
               onClick={handleAddTeam}
-              class='flex flex-row items-center font-bold text-xl rounded-md bg-gradient-to-t w-1/3 from-green-600 to-slate-100'
-            >
-              <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-                Add
-              </Typography>
-            </Button>
+              label='Add'
+              class='
+                flex flex-row items-center
+                whitespace-normal
+                w-[200px] h-[48px] overflow-auto font-sans
+                transition ease-linear delay-[20ms] duration-[30ms]
+                font-bold text-3xl text-center text-slate-100
+                border-2 border-green-500 rounded-md
+                bg-lime-600
+                hover:bg-lime-500
+                hover:cursor-pointer
+                hover:shadow-inner hover:shadow-lime-500
+                hover:border-lime-400
+                hover:scale-105
+              '
+            />
           </Box>
         </Box>
       )}
       
-      <Box class='flex flex-col p-8'>
+      <Box class='
+        flex flex-col p-8
+      '>
         {teams.map((team) => (
           <Box
             key={team.id}
-            class={`flex flex-col align-center border-4 bg-gradient-to-t from-slate-400 to-slate-200 border-slate-800 mb-2 p-2 hover:bg-slate-600 hover:cursor-pointer rounded-md ${currentTeam?.id === team.id && 'bg-gradient-to-t from-green-500 to-green-700'}`}
+            class={`
+              flex flex-col align-center
+              p-2
+              border-r-2 border-l-2 border-slate-700
+              first:border-t-2 first:rounded-t-md
+              last:border-b-2 last:rounded-b-md
+              bg-gradient-to-t from-slate-400 to-slate-200
+              transition ease-in-out delay-[20ms] duration-[100ms]
+            hover:bg-slate-600 hover:cursor-pointer  
+              ${currentTeam?.id === team.id && 'scale-[102%] rounded-md border-2 bg-gradient-to-t from-green-500 to-green-700'}
+            `}
             onClick={() => currentTeam?.id === team.id ? setCurrentTeam(null) : setCurrentTeam(team)}
           >
-            <Typography class='text-center font-bold text-2xl'>
+            <Typography class='text-center font-bold text-3xl'>
               {team.name}
             </Typography>
 
@@ -151,91 +198,75 @@ const Teams = ({ gameMode }) => {
         <Box class='flex flex-row justify-center mt-96 pr-4 pl-4 pt-4'>
           <Button
             onClick={handleDeleteTeam}
-            class='flex flex-row items-center font-bold text-xl rounded-md w-1/3 h-28 border-2 border-red-900 bg-gradient-to-t from-red-600 to-slate-100'
-          >
-            <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-              Confirm Delete
-            </Typography>
-          </Button>
+            label='Confirm Delete'
+            class='
+              flex flex-row items-center
+              whitespace-normal 
+              p-8 sm:h-[100px] overflow-auto font-sans
+              transition ease-linear delay-[20ms] duration-[30ms]
+              font-bold text-3xl text-center
+              border-2 border-red-600 rounded-md
+              bg-orange-500
+              hover:bg-orange-700
+              hover:cursor-pointer hover:text-slate-200
+              hover:shadow-inner hover:shadow-red-500
+              hover:border-orange-600
+              hover:scale-105
+            '
+          />
         </Box>
       </Modal>
 
       {currentTeam && (
         <Box
-          class='flex flex-col justify-center items-center border-4 rounded-md md:p-1 sm:p-1 bg-gradient-to-b from-slate-600 to-slate-100 m-8'
+          class='flex flex-col justify-center items-center border-4 rounded-md bg-gradient-to-b from-slate-600 to-slate-100 m-8'
         >
-          <Typography class='text-center font-bold text-3xl mb-5'>
+          <Typography class='text-center font-bold text-3xl mt-2 mb-5'>
             {`Actions on: ${currentTeam?.name}`}
           </Typography>
 
-          <Box class='flex flex-col items-center justify-center md:w-1/2 sm:w-full'>
-            <Box class='flex flex-row items-center justify-center'>
-              <Typography class='text-center font-bold md:text-3xl sm:text-xl mr-2'>
-                Points:
-              </Typography>
+          <RangeInput
+            min={10}
+            max={1000}
+            value={points}
+            onChange={v => setPoints(v)}
+          />
 
-              <input
-                type='range'
-                class='form-range h-6 p-2 w-1/2 focus:outline-none focus:ring-0 focus:shadow-none'
-                min={10}
-                max={1000}
-                value={points}
-                onChange={evt => setPoints(evt.target.valueAsNumber)}
-              />
-
-              <Typography class='text-center font-bold md:text-3xl sm:text-xl ml-2'>
-                {points}
-              </Typography>
-            </Box>
-
-            <Box class='flex flex-row items-center justify-around mt-4 w-full'>
-              <Button
-                onClick={handleAddPoints}
-                class='flex flex-row items-center font-bold text-xl rounded-md bg-gradient-to-t w-1/3 from-slate-600 to-slate-100'
-              >
-                <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-                  Add
-                </Typography>
-              </Button>
-
-              <Button
-                onClick={handleRemovePoints}
-                class='flex flex-row items-center font-bold text-xl rounded-md w-1/3 bg-gradient-to-t from-slate-600 to-slate-100'
-              >
-                <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-                  Remove
-                </Typography>
-              </Button>
-            </Box>
-
+          <Box class='flex flex-row justify-around mt-4 w-full'>
+            <Button
+              onClick={handleAddPoints}
+              label='Add'
+              class='
+                flex flex-row items-center 
+                h-10 w-1/3
+                transition ease-linear delay-[20ms] duration-[30ms]
+                font-bold text-2xl
+                border-2 border-slate-600 rounded-md
+                bg-slate-500
+                hover:bg-slate-400 hover:cursor-pointer
+                hover:scale-105
+              '
+            />
+            
+            <Button
+              onClick={handleRemovePoints}
+              label='Remove'
+              class='
+                flex flex-row items-center 
+                h-10 w-1/3
+                transition ease-linear delay-[20ms] duration-[30ms]
+                font-bold text-2xl
+                border-2 border-slate-600 rounded-md
+                bg-slate-500
+                hover:bg-slate-400 hover:cursor-pointer
+                hover:scale-105
+              '
+            />
           </Box>
 
-          <Button
-            onClick={handleRespawn}
-            class='flex mt-8 flex-row items-center font-bold text-xl h-10 rounded-md md:w-1/2 sm:w-full border-4 bg-gradient-to-r from-slate-600 via-slate-100 to-slate-600'
-          >
-            <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-              Death/Respawn
-            </Typography>
-          </Button>
+          <ResetButton classes='mt-8' onClick={handleRespawn} />
 
-          <Button
-            onClick={handleReset}
-            class='flex mt-8 flex-row items-center font-bold text-xl rounded-md md:w-1/2 sm:w-full border-4 bg-gradient-to-r from-red-600 via-orange-200 to-orange-500'
-          >
-            <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-              Reset Team points
-            </Typography>
-          </Button>
-
-          <Button
-            onClick={() => setConfirm(true)}
-            class='flex mt-8 flex-row items-center font-bold text-xl rounded-md w-full border-4 bg-gradient-to-r from-red-600 via-orange-200 to-orange-500'
-          >
-            <Typography class='flex flex-row flex-grow justify-center text-center font-bold text-2xl'>
-              DELETE
-            </Typography>
-          </Button>
+          <DeleteButton onClick={() => setConfirm(true)} />
         </Box>
       )}
     </Box>

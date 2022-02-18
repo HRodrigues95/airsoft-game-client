@@ -289,10 +289,11 @@ export const gameModesSlice = createSlice({
       .addCase(updateLocation.fulfilled, (state, action) => {
         const { payload } = action
 
-        state.currentLocations = state.currentLocations.map( team => {
-          if (team.id === payload.id) return payload
-          else return team
+        state.currentLocations = state.currentLocations.map(location => {
+          if (location.id === payload.id) return payload
+          else return location
         })
+
         state.loading = false
       })
       .addCase(deleteLocation.pending, (state) => {
