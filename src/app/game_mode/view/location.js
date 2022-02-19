@@ -1,44 +1,64 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Typography, Button, Modal } from '@mui/material'
-import { updateLocation, deleteLocation } from '../reducer'
-import { RangeInput, DeleteButton, LocationButton, ResetButton } from './controls'
+import { updateLocation, deleteLocation, updateActionTeam } from '../reducer'
+import { NumberInput, DeleteButton, LocationButton, ResetButton } from './controls'
 
 const Location = ({ gameMode, location }) => {
   const [confirm, setConfirm] = useState('')
   const [points, setPoints] = useState(0)
-  const [timer, setTimer] = useState(null)
+  const [bonus, setBonus] = useState(0)
+
+  const pointsTimer = useRef()
+  const bonusTimer = useRef()
+
   const dispatch = useDispatch()
   
-  const { teams } = useSelector(({ gameModes }) => ({ teams: gameModes.currentTeams }))
+  const { teams, ongoing } = useSelector(({ gameModes }) => ({ 
+    teams: gameModes.currentTeams,
+    ongoing: gameModes.currentGameMode.ongoing
+  }))
 
   useEffect(() => {
-    setPoints(location.points)
+    setPoints(location?.points)
+    setBonus(location?.capture_bonus)
   }, [location, setPoints])
-
-  const update = (v) => {
-    const form = new FormData()
-    form.append('location[points]', v)
-    dispatch(updateLocation({ gameMode, location: location.id, data: form }))
-  }
 
   const handleUpdatePoints = (v) => {
     if (v) {
-      clearTimeout(timer)
+      clearTimeout(pointsTimer.current)
       setPoints(v)
-      setTimer(setTimeout(() => update(v), 500))
+      pointsTimer.current = setTimeout(() => {
+        const form = new FormData()
+        form.append('location[points]', v)
+        dispatch(updateLocation({ gameMode, location: location.id, data: form }))
+      }, 500)
+    }
+  }
+
+  const handleUpdateBonus = (v) => {
+    if (v) {
+      clearTimeout(bonusTimer.current)
+      setBonus(v)
+      bonusTimer.current = setTimeout(() => {
+        const form = new FormData()
+        form.append('location[capture_bonus]', v)
+        dispatch(updateLocation({ gameMode, location: location.id, data: form }))
+      }, 500)
     }
   } 
 
   const handleCapture = (id, team) => {
-    const form = new FormData()
-    if (!location?.current_team || location?.current_team?.id !== team) {
-      form.append('location[team_id]', team)
-    } else {
-      form.append('location[team_id]', null)
-    }
+    const Locationform = new FormData()
 
-    dispatch(updateLocation({ gameMode, location: location.id, data: form }))
+    if (!location?.current_team || location?.current_team?.id !== team) {
+      Locationform.append('location[team_id]', team)
+      const Teamform = new FormData()
+      Teamform.append('team[amount]', bonus)
+      dispatch(updateActionTeam({ gameMode, team, data: Teamform, action: 'increase' }))
+    } else Locationform.append('location[team_id]', null)
+
+    dispatch(updateLocation({ gameMode, location: id, data: Locationform }))
   }
 
   const handleReset = (id) => {
@@ -55,19 +75,32 @@ const Location = ({ gameMode, location }) => {
 
   return (
     <Box
-      class='flex sm:w-full md:ml-2 md:mr-2 md:w-2/6 flex-col flex-grow items-center rounded-md mb-4 bg-gradient-to-t from-stone-800 to-stone-400 border-4 shadow-inner'
+      class='
+        flex flex-col flex-grow items-center
+        sm:w-full md:ml-2 md:mr-2 md:w-2/6 
+        rounded-md mb-4 
+        bg-gradient-to-t from-stone-800 to-stone-400 border-4
+        shadow-md shadow-zinc-600
+      '
     >
-      <Typography class='text-center font-bold text-3xl mt-4 mb-4'>
+      <Typography class='text-center font-bold text-5xl mt-4 mb-4'>
         {location.name}
       </Typography>
-      
-      <RangeInput
-        min={0}
+
+      <NumberInput
+        label='Holding:'
         max={50}
+        min={0}
         value={points}
-        onChange={v => {
-          handleUpdatePoints(v)
-        }}
+        onChange={v => handleUpdatePoints(v)}
+      />
+
+      <NumberInput
+        label='Capture:'
+        max={1000}
+        min={0}
+        value={bonus}
+        onChange={v => handleUpdateBonus(v)}
       />
 
       <Box
@@ -77,6 +110,7 @@ const Location = ({ gameMode, location }) => {
           <LocationButton 
             key={team.id}
             selected={location.current_team?.id === team.id}
+            disabled={!ongoing}
             name={team.name}
             onClick={() => handleCapture(location.id, team.id)} 
           />

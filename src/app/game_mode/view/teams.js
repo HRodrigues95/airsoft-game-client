@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Typography, Modal } from '@mui/material'
 import { getTeams, updateActionTeam, updateTeam, createTeam, deleteTeam } from '../reducer'
-import { RangeInput, DeleteButton, ResetButton, Button } from './controls'
+import { NumberInput, DeleteButton, ResetButton, Button } from './controls'
+import { UPDATE_TICK } from '../../components/utils'
 
 const Teams = ({ gameMode }) => {
   const [currentTeam, setCurrentTeam] = useState(null)
@@ -11,7 +12,9 @@ const Teams = ({ gameMode }) => {
   const [confirm, setConfirm] = useState(false)
   const [teamName, setTeamName] = useState('')
   const dispatch = useDispatch()
-  const { teams } = useSelector(({ gameModes }) => ({ teams: gameModes.currentTeams }))
+  const { teams } = useSelector(({ gameModes }) => ({
+    teams: gameModes.currentTeams 
+  }))
 
   useEffect(() => {
     dispatch(getTeams({ gameMode }))
@@ -20,14 +23,6 @@ const Teams = ({ gameMode }) => {
   useEffect(() => {
     setTeamName('')
   }, [adding, setTeamName])
-
-  useEffect(() => {
-    // const timer = setTimeout(() => {
-    //   dispatch(getTeams({ gameMode }))
-    // }, 2000)
-  
-    // return () => clearTimeout(timer);
-  })
 
   const handleAddTeam = async () => {
     if (teamName) {
@@ -62,12 +57,6 @@ const Teams = ({ gameMode }) => {
     }
   }
 
-  const handleRespawn = () => {
-    const form = new FormData()
-    form.append('team[amount]', 1)
-    dispatch(updateActionTeam({ gameMode, team: currentTeam.id, data: form, action: 'decrease' }))
-  }
-
   const handleReset = () => {
     const form = new FormData()
     form.append('team[current_points]', 0)
@@ -75,7 +64,7 @@ const Teams = ({ gameMode }) => {
   }
 
   return (
-    <Box class='flex flex-col justify-center border-4 rounded-md align-center mt-8 bg-gradient-to-t from-slate-600 to-slate-100'>
+    <Box class='flex flex-col justify-center border-4 rounded-md align-center mt-4 bg-gradient-to-t from-slate-600 to-slate-100'>
       <Box class='flex flex-row justify-between pr-4 pl-4 pt-4'>
         <Typography class='text-center font-bold text-3xl'>
           Teams
@@ -219,13 +208,23 @@ const Teams = ({ gameMode }) => {
 
       {currentTeam && (
         <Box
-          class='flex flex-col justify-center items-center border-4 rounded-md bg-gradient-to-b from-slate-600 to-slate-100 m-8'
+          class='
+            flex flex-col justify-center items-center 
+            border-4 rounded-md m-8
+            bg-gradient-to-t from-slate-600 to-slate-100
+            shadow-lg shadow-slate-800
+          '
         >
           <Typography class='text-center font-bold text-3xl mt-2 mb-5'>
-            {`Actions on: ${currentTeam?.name}`}
+            {`Actions on:`}
+          </Typography>
+          
+          <Typography class='text-center font-bold text-4xl mb-5'>
+            {currentTeam?.name}
           </Typography>
 
-          <RangeInput
+          <NumberInput
+            label='Points:'
             min={10}
             max={1000}
             value={points}
@@ -264,7 +263,7 @@ const Teams = ({ gameMode }) => {
             />
           </Box>
 
-          <ResetButton classes='mt-8' onClick={handleRespawn} />
+          <ResetButton classes='mt-8' onClick={handleReset} />
 
           <DeleteButton onClick={() => setConfirm(true)} />
         </Box>

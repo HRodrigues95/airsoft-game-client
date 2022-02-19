@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Typography } from '@mui/material'
 import { getLocations, createLocation } from '../reducer'
-import { RangeInput, Button } from './controls'
+import { NumberInput, Button } from './controls'
 import Location from './location'
 
 const Locations = ({ gameMode }) => {
@@ -12,7 +12,7 @@ const Locations = ({ gameMode }) => {
 
   const dispatch = useDispatch()
   const { locations } = useSelector(({ gameModes }) => ({ 
-    locations: gameModes.currentLocations 
+    locations: gameModes.currentLocations
   }))
 
   useEffect(() => {
@@ -35,7 +35,11 @@ const Locations = ({ gameMode }) => {
   }
 
   return (
-    <Box class='flex flex-col justify-center p-4 border-4 rounded-md mt-2 align-center bg-gradient-to-t from-slate-600 to-slate-100'>
+    <Box class='
+      flex flex-col justify-center align-center
+      p-4 border-4 rounded-md mt-2 
+      bg-gradient-to-t from-slate-600 to-slate-100'
+    >
       <Box class='flex flex-row justify-between pr-4 pl-4 pt-4'>
         <Typography class='text-center font-bold text-3xl'>
           Locations
@@ -65,7 +69,12 @@ const Locations = ({ gameMode }) => {
 
       {adding && (
         <Box
-          class='flex flex-col justify-center items-center flex-grow border-2 rounded-md mt-2 p-2 bg-gradient-to-b from-slate-600 to-slate-300'
+          class='
+            flex flex-col justify-center items-center flex-grow 
+            border-2 rounded-md mt-2 p-2 
+            bg-gradient-to-t from-slate-600 to-slate-300
+            shadow-lg shadow-slate-700
+          '
         >
           <Typography class='text-center font-bold text-4xl  mr-2'>
             New Location:
@@ -78,21 +87,22 @@ const Locations = ({ gameMode }) => {
             onChange={evt => setLocationName(evt.target.value)}
           />
 
-          <RangeInput
-            min={0}
+          <NumberInput
+            label='Points:'
             max={50}
+            min={0}
             value={locationPoints}
             onChange={v => setLocationPoints(v)}
           />
 
-          <Box class='flex flex-row w-5/6 justify-between pr-2 pl-2 pt-4'>
+          <Box class='flex flex-row justify-evenly w-full pt-4'>
             <Button
               onClick={() => setAdding(!adding)}
               label='Cancel'
               class='
                 flex flex-row items-center
                 whitespace-normal
-                w-[200px] h-[48px] overflow-auto font-sans
+                w-[45%] h-[48px] overflow-auto font-sans
                 transition ease-linear delay-[20ms] duration-[30ms]
                 font-bold text-3xl text-center
                 border-2 border-red-500 rounded-md
@@ -111,7 +121,7 @@ const Locations = ({ gameMode }) => {
               class='
                 flex flex-row items-center
                 whitespace-normal
-                w-[200px] h-[48px] overflow-auto font-sans
+                w-[45%] h-[48px] overflow-auto font-sans
                 transition ease-linear delay-[20ms] duration-[30ms]
                 font-bold text-3xl text-center text-slate-100
                 border-2 border-green-500 rounded-md

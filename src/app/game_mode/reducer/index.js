@@ -42,12 +42,11 @@ export const getGameMode = createAsyncThunk(
 
 export const updateGameMode = createAsyncThunk(
   'gameModes/updateGameMode',
-  async ({ gameMode, action }) => {
+  async ({ gameMode, action, data }) => {
     let url =  GameMode(gameMode)
-    if (action) {
-      url = GameModeAction(gameMode, action)
-    }
+    if (action) url = GameModeAction(gameMode, action)
     const options = { method: 'PATCH' }
+    if (data) options.body = data
 
     const response = await fetch(url, options);
     const json = await response.json()
