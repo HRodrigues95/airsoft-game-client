@@ -1,38 +1,23 @@
+@import '../../styles/pallete.scss';
 
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-.number-input {
-  &_container {
-    width: 80px !important;
-    margin: 0px 10px !important;
-    background-color: dimgrey;
-  }
-
-  &_text {
-    font-size: 24px !important;
-    padding: 4px !important;
+.game-mode {
+  &__start{
+    margin-top: 10px !important;
+    color: $slate_200 !important;
+    font-size: 52px !important;
     font-weight: bold !important;
-    text-align: center !important;
-
-    &:focus {
-      user-select: text !important;
-    }
+    border: 4px solid $slate_200 !important;
+    border-radius: 5px !important;
+    background-color: $green_700 !important;
   }
 
-  &_icon {
-    width: 48px !important;
-    height: 48px !important;
-
-    color: seashell !important
+  &__stop {
+    margin-top: 10px !important;
+    color: $slate_200 !important;
+    font-size: 52px !important;
+    font-weight: bold !important;
+    border: 4px solid $slate_200 !important;
+    border-radius: 5px !important;
+    background-color: $red_500 !important;
   }
 }

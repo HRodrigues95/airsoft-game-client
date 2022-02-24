@@ -1,0 +1,38 @@
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.number-input {
+  &_container {
+    width: 80px !important;
+    margin: 0px 10px !important;
+    background-color: dimgrey;
+  }
+
+  &_text {
+    font-size: 24px !important;
+    padding: 4px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+
+    &:focus {
+      user-select: text !important;
+    }
+  }
+
+  &_icon {
+    width: 48px !important;
+    height: 48px !important;
+
+    color: seashell !important
+  }
+}

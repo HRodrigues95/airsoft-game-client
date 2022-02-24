@@ -1,0 +1,43 @@
+@import '../../styles/pallete.scss';
+
+.teams-display {
+  &__points {
+    &--add {
+      font-size: 24px !important;
+      line-height: 32px !important;
+      font-weight: bold !important;
+      color: $slate_200 !important;
+
+      width: 40% !important;
+    }
+
+    &--remove {
+      font-size: 24px !important;
+      line-height: 32px !important;
+      font-weight: bold !important;
+      color: $slate_200 !important;
+
+      width: 40% !important;
+    }
+  }
+
+  &__reset {
+    font-size: 24px !important;
+    line-height: 32px !important;
+    font-weight: bold !important;
+    color: $slate_200 !important;
+
+    width: 90% !important;
+    margin: 24px 0px;
+  }
+
+  &__delete {
+    font-size: 24px !important;
+    line-height: 32px !important;
+    font-weight: bold !important;
+    color: $slate_200 !important;
+
+    width: 90% !important;
+    margin: 10px 0px 24px 0px;
+  }
+}

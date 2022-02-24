@@ -1,66 +1,58 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Box } from '@mui/material'
-import { getGameMode, updateGameMode, getLocations, getTeams } from '../reducer'
+import { Box, Button } from '@mui/material'
+import { getGameMode, updateGameMode } from '../reducer'
+import { getLocations } from '../../locations/reducer'
 import Logo from '../../imgs/Logo.jpg'
 import Map from '../../imgs/Map_v1.png'
-import Teams from './teams'
-import Locations from './locations'
-import { Button, NumberInput } from './controls'
+import { NumberInput } from '../../components/controls'
+import TeamsDisplay from '../../components/TeamsDisplay'
+import LocationsList from '../../components/LocationList'
 import { UPDATE_TICK } from '../../components/utils'
+import './style.scss'
 
 const ViewGameMode = () => {
   const [tickTime, setTickTime] = useState(5)
   const [timer, setTimer] = useState(null)
-  const { id } = useParams()
+  const { game_mode_id } = useParams()
   const intervalRef = useRef();
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const gameMode = useSelector(({ gameModes }) => gameModes.currentGameMode)
-  const { ongoing } = gameMode
+  const { gameMode } = useSelector(({ gameModes }) => ({
+    gameMode: gameModes.currentGameMode
+  }))
 
   useEffect(() => {
     const getData = async () => {
-      const { payload } = await dispatch(getGameMode(id))
+      const { payload } = await dispatch(getGameMode(game_mode_id))
+      dispatch(getLocations({ gameMode: game_mode_id }))
       setTickTime(payload.update_tick)
     }
     getData()
-  }, [id, dispatch, setTickTime])
+  }, [game_mode_id, dispatch, setTickTime])
 
   useEffect(() => {
-    if(ongoing) {
-      intervalRef.current = setInterval(async () => {
-        await dispatch(getGameMode(id))
-        await dispatch(getTeams({ gameMode: id }))
-        await dispatch(getLocations({ gameMode: id }))
-      }, UPDATE_TICK)
-    } else {
-      clearInterval(intervalRef.current)
-    }
-  }, [ongoing])
-
-  
-  useEffect(() => {
-    const intervalId = intervalRef.current
-    return () => { clearInterval(intervalId) }
+    return () => { clearInterval(intervalRef.current) }
   }, [])
 
   const handleBack = () => navigate('/')
 
   const handleStartStop = () => {
     if (gameMode.ongoing) {
-      dispatch(updateGameMode({gameMode: id, action: 'end'}))
+      dispatch(updateGameMode({gameMode: game_mode_id, action: 'end'}))
+      clearInterval(intervalRef.current)
     } else {
-      dispatch(updateGameMode({gameMode: id, action: 'start'}))
+      dispatch(updateGameMode({gameMode: game_mode_id, action: 'start'}))
+      intervalRef.current = setInterval(() => dispatch(getGameMode(game_mode_id)), UPDATE_TICK)
     }
   }
   
   const update = (v) => {
     const form = new FormData()
     form.append('game_mode[update_tick]', v)
-    dispatch(updateGameMode({ gameMode: gameMode.id, data: form }))
+    dispatch(updateGameMode({ gameMode: game_mode_id, data: form }))
   }
 
   const handleUpdatePoints = (v) => {
@@ -76,17 +68,26 @@ const ViewGameMode = () => {
       <img alt='logo' class='flex w-28 self-center' src={Logo} />
 
       <Button
+        className='location-page__back'
         onClick={handleBack}
-        label='Back'
-        class={`
-          flex flex-row items-center 
-          mt-3 rounded-md p-2
-          border-2
-          text-6xl text-slate-300 font-bold
-          hover:cursor-pointer
-        `}
-      />
+        variant='contained'
+      >
+        Back
+      </Button>
       
+      <img alt='logo' class='flex md:w-1/2 sm:w-full self-center rounded-lg mt-4' src={Map} />
+
+      {gameMode?.ongoing && <Box className='location-page__ongoing' />}
+      
+      <Button
+        className={gameMode?.ongoing ? 'game-mode__stop' : 'game-mode__start' }
+        color='primary'
+        onClick={handleStartStop}
+        variant='contained'
+      >
+        {gameMode?.ongoing ? 'Stop' : 'Start'}
+      </Button>
+
       <Box
         class='
           flex flex-col items-center justify-center flex-grow
@@ -104,25 +105,9 @@ const ViewGameMode = () => {
         />
       </Box>
 
-      <Button
-        onClick={handleStartStop}
-        label={gameMode?.ongoing ? 'Stop' : 'Start'}
-        class={`
-          flex flex-row items-center 
-          rounded-md border-4
-          w-full
-          hover:cursor-pointer
-          transition ease-linear delay-[20ms] duration-[30ms]
-          mt-4 p-8
-          text-6xl text-slate-800 font-extrabold
-          ${gameMode?.ongoing ? ' animate-pulse bg-gradient-to-t from-red-600 via-red-100 to-red-600' : 'bg-gradient-to-t from-green-600 via-teal-100 to-green-600'}`}
-      />
-      
-      <img alt='logo' class='flex md:w-1/2 sm:w-full self-center rounded-lg mt-4' src={Map} />
+      {gameMode && <TeamsDisplay  gameMode={gameMode?.id} />}
 
-      <Teams gameMode={id} />
-
-      <Locations gameMode={id} />
+      {gameMode && <LocationsList />}
     </Box>
   )
 }

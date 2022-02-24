@@ -1,27 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import { Provider } from 'react-redux';
+import { green, grey } from '@mui/material/colors';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import * as serviceWorker from './serviceWorker';
 import { store } from './app/store';
-import GameMode from './app/routes/gameModes'
+import Routing from './app/routes'
 
-const Routing = () => {
-  return(
-    <Router>
-      <Routes>
-        <Route path="*" element={<GameMode />} />
-      </Routes>
-    </Router>
-  )
-}
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: green[500],
+    },
+    secondary: {
+      main: grey[600],
+    },
+  },
+})
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Routing />
-    </Provider>
-  </React.StrictMode>,
+  <ThemeProvider theme={theme}>
+    <React.StrictMode>
+      <Provider store={store}>
+        <Routing />
+      </Provider>
+    </React.StrictMode>
+  </ThemeProvider>,
   document.getElementById('root')
 );
 

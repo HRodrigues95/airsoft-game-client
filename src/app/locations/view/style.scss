@@ -1,0 +1,65 @@
+@import '../../styles/pallete.scss';
+
+.location-page {
+  &__ongoing {
+    position: absolute;
+    top: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    border: solid 2px $green_300;
+    background-color: $green_300;
+    animation: glow 1s infinite alternate;
+    
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 10px -10px $green_300;
+      }
+      to {
+        box-shadow: 0 0 10px 10px $green_300;
+      }
+    }
+  }
+
+  &__header {
+    text-align: center;
+    font-size: 52px !important;
+    font-weight: 700 !important;
+    color: $slate_800 !important;
+    margin: 10px !important;
+  }
+
+  &__team {
+    margin: 12px 0px !important;
+    color: $slate_200 !important;
+    font-size: 24px !important;
+    border: 4px solid $slate_200 !important;
+    width: 80% !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
+
+    &--selected {
+      background-color: $green_700 !important;
+    }
+  }
+
+  &__delete {
+    color: $slate_200 !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+
+    margin: 18px 0 !important;
+    border: 4px solid $slate_200 !important;
+    width: 60% !important;
+  }
+  
+  &__back {
+    margin-top: 10px !important;
+    color: $slate_200 !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    border: 4px solid $slate_200 !important;
+    border-radius: 5px !important;
+    background-color: black !important;
+  }
+}
